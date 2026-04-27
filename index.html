@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You, Always</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Italiana&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    min-height: 100vh;
+    background: #07000f;
+    overflow-x: hidden;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative;
+  }
+  .aurora { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+  .aurora-band {
+    position: absolute; border-radius: 60%;
+    filter: blur(90px); mix-blend-mode: screen; opacity: 0;
+    animation: aurora-drift var(--ad) ease-in-out infinite alternate var(--adel);
+  }
+  .a1 { width:80vw;height:40vh;background:radial-gradient(ellipse,#6a004a 0%,transparent 70%);top:-10%;left:-10%;--ad:14s;--adel:0s; }
+  .a2 { width:70vw;height:50vh;background:radial-gradient(ellipse,#3d0030 0%,transparent 70%);top:10%;right:-10%;--ad:18s;--adel:-5s; }
+  .a3 { width:60vw;height:60vh;background:radial-gradient(ellipse,#1a0040 0%,transparent 70%);bottom:-10%;left:10%;--ad:12s;--adel:-8s; }
+  .a4 { width:50vw;height:40vh;background:radial-gradient(ellipse,#5c0035 0%,transparent 70%);bottom:5%;right:5%;--ad:16s;--adel:-3s; }
+  @keyframes aurora-drift {
+    0%   { opacity:0.0;  transform:translateY(0) scale(1); }
+    40%  { opacity:0.28; }
+    70%  { opacity:0.18; }
+    100% { opacity:0.22; transform:translateY(-30px) scale(1.1); }
+  }
+  .candle-glow {
+    position:fixed;bottom:-80px;left:50%;transform:translateX(-50%);
+    width:600px;height:300px;pointer-events:none;z-index:2;
+    background:radial-gradient(ellipse at center bottom,rgba(255,140,40,0.13) 0%,transparent 70%);
+    animation:flicker 3s ease-in-out infinite alternate;
+  }
+  @keyframes flicker {
+    0%   { opacity:0.6;transform:translateX(-50%) scaleX(1); }
+    30%  { opacity:1;  transform:translateX(-50%) scaleX(1.06); }
+    70%  { opacity:0.8;transform:translateX(-50%) scaleX(0.97); }
+    100% { opacity:0.7;transform:translateX(-50%) scaleX(1.02); }
+  }
+  .stars { position:fixed;inset:0;pointer-events:none;z-index:0; }
+  .star  { position:absolute;border-radius:50%;background:white;animation:twinkle var(--d) ease-in-out infinite alternate;opacity:0; }
+  @keyframes twinkle {
+    from { opacity:0;transform:scale(0.4); }
+    to   { opacity:var(--o);transform:scale(1); }
+  }
+  .petal {
+    position:fixed;font-size:var(--fs);opacity:0;pointer-events:none;z-index:3;
+    filter:hue-rotate(var(--hue));
+    animation:fall var(--dur) ease-in infinite var(--delay);
+  }
+  @keyframes fall {
+    0%   { transform:translateY(-60px) translateX(0) rotate(0deg);opacity:0; }
+    8%   { opacity:0.75; }
+    92%  { opacity:0.4; }
+    100% { transform:translateY(108vh) translateX(var(--dx)) rotate(600deg);opacity:0; }
+  }
+  .mini-heart {
+    position:fixed;opacity:0;pointer-events:none;z-index:4;
+    font-size:var(--rfs);color:var(--rc);
+    animation:rise var(--rd) ease-out infinite var(--rdelay);
+  }
+  @keyframes rise {
+    0%   { transform:translateY(0) scale(0.4) rotate(-15deg);opacity:0; }
+    12%  { opacity:0.9; }
+    85%  { opacity:0.3; }
+    100% { transform:translateY(-75vh) scale(1.1) rotate(15deg);opacity:0; }
+  }
+  .container {
+    position:relative;z-index:10;
+    display:flex;flex-direction:column;align-items:center;gap:0;
+    padding:2rem;text-align:center;
+  }
+  .heart-wrap {
+    position:relative;
+    animation:heartbeat-glow 1.8s ease-in-out infinite;
+  }
+  @keyframes heartbeat-glow {
+    0%,100% { filter:drop-shadow(0 0 35px rgba(230,60,110,0.85)) drop-shadow(0 0 70px rgba(200,30,90,0.45)); }
+    45%     { filter:drop-shadow(0 0 65px rgba(255,80,140,1.0))  drop-shadow(0 0 120px rgba(255,60,120,0.75)); }
+  }
+  #heart-canvas { display:block; }
+  .title {
+    font-family:'Italiana',serif;
+    font-size:clamp(2.8rem,6vw,4.5rem);font-weight:400;color:#f8bbd0;
+    letter-spacing:0.12em;margin-top:0.4rem;
+    text-shadow:0 0 50px rgba(248,187,208,0.55),0 2px 20px rgba(180,0,80,0.3);
+    animation:fadeUp 1.6s ease both 0.3s;
+  }
+  .divider {
+    width:200px;height:1px;margin:0.9rem 0;
+    background:linear-gradient(90deg,transparent,#e91e8c 40%,#ff6bac 60%,transparent);
+    animation:fadeUp 1.6s ease both 0.6s;
+  }
+  .message {
+    max-width:540px;font-size:clamp(1.05rem,2.4vw,1.25rem);
+    font-weight:300;line-height:2.1;color:#fce4ec;
+    font-style:italic;letter-spacing:0.03em;
+    animation:fadeUp 1.6s ease both 0.9s;
+  }
+  .message em { font-style:normal;color:#f48fb1;font-weight:400; }
+  .signature {
+    margin-top:1.6rem;font-family:'Italiana',serif;font-size:1.55rem;
+    color:#f06292;letter-spacing:0.15em;
+    animation:fadeUp 1.6s ease both 1.2s;
+    text-shadow:0 0 25px rgba(240,98,146,0.6);
+  }
+  @keyframes fadeUp {
+    from { opacity:0;transform:translateY(28px); }
+    to   { opacity:1;transform:translateY(0); }
+  }
+  .sparkles { display:flex;gap:1.2rem;margin-top:2rem;animation:fadeUp 1.6s ease both 1.5s; }
+  .sp { width:6px;height:6px;border-radius:50%;background:#e91e8c;animation:blink 2.2s ease-in-out infinite; }
+  .sp:nth-child(2){animation-delay:.44s;width:4px;height:4px;background:#f48fb1;}
+  .sp:nth-child(3){animation-delay:.88s;}
+  .sp:nth-child(4){animation-delay:.22s;width:4px;height:4px;background:#f48fb1;}
+  .sp:nth-child(5){animation-delay:.66s;}
+  @keyframes blink {
+    0%,100%{opacity:0.25;transform:scale(0.7);}
+    50%{opacity:1;transform:scale(1.5);}
+  }
+</style>
+</head>
+<body>
+
+<div class="aurora">
+  <div class="aurora-band a1"></div>
+  <div class="aurora-band a2"></div>
+  <div class="aurora-band a3"></div>
+  <div class="aurora-band a4"></div>
+</div>
+<div class="candle-glow"></div>
+<div class="stars" id="stars"></div>
+<div id="petals"></div>
+<div id="mini-hearts"></div>
+
+<div class="container">
+  <div class="heart-wrap">
+    <canvas id="heart-canvas" width="300" height="300"></canvas>
+  </div>
+  <h1 class="title">Reynalyn, For You, Baby</h1>
+  <div class="divider"></div>
+  <p class="message">
+    I just wanted to remind you how much you mean to me.<br><br>
+      In a world that feels so loud and messy sometimes,<br>
+      you’re my calm, my comfort, my <em>favorite place to be.</em><br><br>
+      
+      I don’t say it enough, but I’m really grateful for you<br>
+      for your smile, your care, and just the way you exist in my life.<br><br>
+      
+      You make everything feel softer and so much more beautiful.<br><br>
+      
+      <em>I love you baby, always. 💕💕.</em>
+  </p>
+  <div class="signature">— with all my love, Umar.</div>
+  <div class="sparkles">
+    <div class="sp"></div><div class="sp"></div><div class="sp"></div>
+    <div class="sp"></div><div class="sp"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ── 3D Heart ──────────────────────────────────────────────────────────
+(function(){
+  const canvas = document.getElementById('heart-canvas');
+  const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(300, 300);
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+  camera.position.set(0, 0, 4.5);
+
+  // Heart shape using parametric heart curve
+  const shape = new THREE.Shape();
+  const steps = 256;
+  for (let i = 0; i <= steps; i++) {
+    const t = (i / steps) * Math.PI * 2;
+    const x =  16 * Math.pow(Math.sin(t), 3);
+    const y =  13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+    const sx = x / 16.5, sy = y / 16.5;
+    i === 0 ? shape.moveTo(sx, sy) : shape.lineTo(sx, sy);
+  }
+
+  const geo = new THREE.ExtrudeGeometry(shape, {
+    depth: 0.48,
+    bevelEnabled: true,
+    bevelThickness: 0.22,
+    bevelSize: 0.16,
+    bevelOffset: 0,
+    bevelSegments: 16,
+    curveSegments: 100,
+  });
+  geo.center();
+
+  // Compute smooth normals for realism
+  geo.computeVertexNormals();
+
+  // Main glossy crimson material
+  const mat = new THREE.MeshPhongMaterial({
+    color:     new THREE.Color('#d81b60'),
+    emissive:  new THREE.Color('#6a0030'),
+    emissiveIntensity: 0.4,
+    specular:  new THREE.Color('#ffb3c6'),
+    shininess: 160,
+  });
+
+  const heart = new THREE.Mesh(geo, mat);
+  scene.add(heart);
+
+  // Inner glow shell
+  const glowMat = new THREE.MeshPhongMaterial({
+    color:    new THREE.Color('#ff1744'),
+    emissive: new THREE.Color('#ff0044'),
+    emissiveIntensity: 0.7,
+    transparent: true, opacity: 0.10,
+    side: THREE.BackSide,
+  });
+  const glow = new THREE.Mesh(geo, glowMat);
+  glow.scale.setScalar(1.06);
+  scene.add(glow);
+
+  // Thin outline for edge pop
+  const edgeMat = new THREE.MeshPhongMaterial({
+    color:    new THREE.Color('#ff4081'),
+    emissive: new THREE.Color('#c2185b'),
+    emissiveIntensity: 0.6,
+    transparent: true, opacity: 0.18,
+    side: THREE.BackSide,
+  });
+  const edge = new THREE.Mesh(geo, edgeMat);
+  edge.scale.setScalar(1.02);
+  scene.add(edge);
+
+  // Lights
+  const key  = new THREE.PointLight('#ff6bac', 4.0, 14);  key.position.set(-2, 2.5, 3.5);
+  const fill = new THREE.PointLight('#ff1744', 2.0, 10);  fill.position.set(2.5, -1.5, 2);
+  const rim  = new THREE.PointLight('#aa00ff', 2.2, 8);   rim.position.set(0.5, -2, -3.5);
+  const top  = new THREE.DirectionalLight('#ffffff', 1.4); top.position.set(-1, 4, 5);
+  const bot  = new THREE.PointLight('#ff0055', 1.0, 6);   bot.position.set(0, -3, 1);
+  scene.add(key, fill, rim, top, bot, new THREE.AmbientLight('#220010', 1.8));
+
+  let t = 0, beatT = 0;
+  function animate(){
+    requestAnimationFrame(animate);
+    t     += 0.009;
+    beatT += 0.042;
+
+    // Spin & tilt
+    const spinY = t;
+    const tiltX = Math.sin(t * 0.28) * 0.22 + 0.18;
+    [heart, glow, edge].forEach(m => { m.rotation.y = spinY; m.rotation.x = tiltX; });
+
+    // Float
+    const fy = Math.sin(t * 0.55) * 0.09;
+    [heart, glow, edge].forEach(m => m.position.y = fy);
+
+    // Heartbeat
+    const b = 1 + 0.05 * Math.pow(Math.max(0, Math.sin(beatT)), 7);
+    heart.scale.setScalar(b);
+    glow.scale.setScalar(b * 1.06);
+    edge.scale.setScalar(b * 1.02);
+
+    // Light pulse sync with beat
+    key.intensity = 3.6 + 2.2 * Math.pow(Math.max(0, Math.sin(beatT)), 6);
+    bot.intensity = 0.8 + 1.4 * Math.pow(Math.max(0, Math.sin(beatT)), 6);
+
+    renderer.render(scene, camera);
+  }
+  animate();
+})();
+
+// ── Stars ──────────────────────────────────────────────────────────────
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 160; i++){
+  const s = document.createElement('div');
+  s.className = 'star';
+  const sz = Math.random()*2.8+0.4;
+  const warm = Math.random()<0.3;
+  s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;background:${warm?'#ffcdd2':'white'};--d:${(Math.random()*4+2).toFixed(1)}s;--o:${(Math.random()*.75+.15).toFixed(2)};animation-delay:${(Math.random()*5).toFixed(1)}s;`;
+  starsEl.appendChild(s);
+}
+
+// ── Petals ─────────────────────────────────────────────────────────────
+const petalsEl = document.getElementById('petals');
+const PC = ['✿','❀','✾','❁','🌸','🌺'];
+for (let i=0;i<22;i++){
+  const p=document.createElement('div'); p.className='petal';
+  const sz=(Math.random()*14+9).toFixed(0), hue=(Math.random()*50-20).toFixed(0);
+  p.textContent=PC[Math.floor(Math.random()*PC.length)];
+  p.style.cssText=`left:${Math.random()*100}%;top:-60px;--fs:${sz}px;--dur:${(Math.random()*9+8).toFixed(1)}s;--delay:${(Math.random()*14).toFixed(1)}s;--dx:${(Math.random()*130-65).toFixed(0)}px;--hue:${hue}deg;`;
+  petalsEl.appendChild(p);
+}
+
+// ── Rising hearts ──────────────────────────────────────────────────────
+const mhEl = document.getElementById('mini-hearts');
+const HC = ['#e91e8c','#f48fb1','#ff4081','#ff80ab','#ec407a','#ff6bac'];
+for (let i=0;i<16;i++){
+  const h=document.createElement('div'); h.className='mini-heart'; h.textContent='♥';
+  const sz=(Math.random()*18+8).toFixed(0);
+  h.style.cssText=`left:${Math.random()*100}%;bottom:${Math.random()*15}%;--rfs:${sz}px;--rc:${HC[Math.floor(Math.random()*HC.length)]};--rd:${(Math.random()*7+5).toFixed(1)}s;--rdelay:${(Math.random()*12).toFixed(1)}s;`;
+  mhEl.appendChild(h);
+}
+</script>
+</body>
+</html>
